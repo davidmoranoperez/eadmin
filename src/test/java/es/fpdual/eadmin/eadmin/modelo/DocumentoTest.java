@@ -57,5 +57,10 @@ public class DocumentoTest {
 		final int resultado = documento.hashCode();
 		assertEquals(CODIGO.hashCode(),resultado);
 	}
-
+	
+	@Test
+	public void deberiaDevolverNoNulo() {
+		assertNotNull(documento.toString());	
+		}
+	
 }
