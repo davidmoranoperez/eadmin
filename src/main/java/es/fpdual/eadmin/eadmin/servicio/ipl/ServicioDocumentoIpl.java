@@ -19,9 +19,17 @@ public class ServicioDocumentoIpl implements ServicioDocumento{
 
 	@Override
 	public void altaDocumento(Documento documento) {
-		
 		repositorioDocumento.altaDocumento(documento);
-		
+	}
+
+	@Override
+	public void modificarDocumento(Documento documento) {
+		repositorioDocumento.modificarDocumento(documento);
+	}
+
+	@Override
+	public void eliminarDocumento(Integer codigo) {
+		repositorioDocumento.eliminarDocumento(codigo);		 
 	}
 
 }
