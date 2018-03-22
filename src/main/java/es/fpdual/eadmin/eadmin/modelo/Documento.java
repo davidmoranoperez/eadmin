@@ -22,7 +22,6 @@ public class Documento extends ModeloBaseAdministracionElectronica{
 		return estado;
 	}
 
-
 	@Override
 	public String toString() {
 		return "El código del documento es: " + getCodigo();
