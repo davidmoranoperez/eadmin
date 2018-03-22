@@ -12,17 +12,18 @@ public class DocumentoTest {
 	private static final Date FECHA_CREACION = new Date();
 	private static final String NOMBRE_DOCUMENTO = "nombre";
 	private static final Boolean DOCUMENTO_PUBLICO = true;
+	private static final Date FECHAMODIFICACION = new Date();
 	private static final Integer CODIGO = 1;
 	private Documento documento;
 
 	@Before
 	public void inicializar() {
-	documento = new Documento(CODIGO,NOMBRE_DOCUMENTO,FECHA_CREACION,DOCUMENTO_PUBLICO,EstadoDocumento.ACTIVO);
+	documento = new Documento(CODIGO,NOMBRE_DOCUMENTO,FECHA_CREACION, FECHAMODIFICACION, DOCUMENTO_PUBLICO,EstadoDocumento.ACTIVO);
 	}
 	
 	@Test
 	public void testComprobarGetter() {	
-		Documento prueba = new Documento(CODIGO,NOMBRE_DOCUMENTO,FECHA_CREACION,DOCUMENTO_PUBLICO,EstadoDocumento.ACTIVO);
+		Documento prueba = new Documento(CODIGO,NOMBRE_DOCUMENTO,FECHA_CREACION, FECHAMODIFICACION, DOCUMENTO_PUBLICO,EstadoDocumento.ACTIVO);
 		assertEquals(DOCUMENTO_PUBLICO,prueba.getPublico());
 		assertEquals(CODIGO,prueba.getCodigo(),0.0);
 		assertEquals(EstadoDocumento.ACTIVO,prueba.getEstado());
@@ -33,14 +34,14 @@ public class DocumentoTest {
 	
 	@Test
 	public void deberiaDevolverTrueSiTienenIgualCodigo() {
-		final Documento documento2 = new Documento(CODIGO,NOMBRE_DOCUMENTO,FECHA_CREACION,DOCUMENTO_PUBLICO,EstadoDocumento.ACTIVO);
+		final Documento documento2 = new Documento(CODIGO,NOMBRE_DOCUMENTO,FECHA_CREACION, FECHAMODIFICACION,DOCUMENTO_PUBLICO,EstadoDocumento.ACTIVO);
 		final Boolean resultado = documento2.equals(documento);
 		assertTrue(resultado);
 	}
 	
 	@Test
 	public void deberiaDevolverFalseSiTienenDistintoCodigo() {
-		final Documento documento2 = new Documento(5,NOMBRE_DOCUMENTO,FECHA_CREACION,DOCUMENTO_PUBLICO,EstadoDocumento.ACTIVO);
+		final Documento documento2 = new Documento(5,NOMBRE_DOCUMENTO,FECHA_CREACION,FECHAMODIFICACION,DOCUMENTO_PUBLICO,EstadoDocumento.ACTIVO);
 		final Boolean resultado = documento2.equals(documento);
 		assertFalse(resultado);
 	}

@@ -7,12 +7,14 @@ public abstract class ModeloBaseAdministracionElectronica {
 	protected Integer codigo;
 	protected String nombre;
 	protected Date fechaCreacion;
+	protected Date fechaModificacion;
 
-	public ModeloBaseAdministracionElectronica(Integer codigo, String nombre, Date fechaCreacion) {
+	public ModeloBaseAdministracionElectronica(Integer codigo, String nombre, Date fechaCreacion, Date fechaModificacion) {
 		super();
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.fechaCreacion = fechaCreacion;
+		this.fechaModificacion = fechaModificacion;
 	}
 
 	public Integer getCodigo() {
@@ -25,6 +27,11 @@ public abstract class ModeloBaseAdministracionElectronica {
 
 	public Date getFechaCreacion() {
 		return fechaCreacion;
+	}
+	
+	
+	public Date getFechaModificacion() {
+		return fechaModificacion;
 	}
 
 	@Override

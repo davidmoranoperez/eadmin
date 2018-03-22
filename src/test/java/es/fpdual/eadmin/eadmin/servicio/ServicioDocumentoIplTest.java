@@ -1,22 +1,19 @@
 package es.fpdual.eadmin.eadmin.servicio;
 
-import java.util.Date;
-
 import org.junit.*;
 
 import es.fpdual.eadmin.eadmin.modelo.Documento;
-import es.fpdual.eadmin.eadmin.modelo.EstadoDocumento;
 import es.fpdual.eadmin.eadmin.repositorio.RepositorioDocumento;
 import es.fpdual.eadmin.eadmin.servicio.ipl.ServicioDocumentoIpl;
+
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
+
+import java.util.Date;
 
 public class ServicioDocumentoIplTest {
 
 	private static final Integer CODIGO = 5;
-	private static final String NOMBRE = "prueba";
-	private static final Date FECHACREACION = new Date();
-	private static final Boolean PUBLICO = true;
-	private static final EstadoDocumento ESTADO = EstadoDocumento.ACTIVO;
 
 	private ServicioDocumento servicioDocumento;
 	private final RepositorioDocumento repositorioDocumento = mock(RepositorioDocumento.class);
@@ -30,16 +27,23 @@ public class ServicioDocumentoIplTest {
 
 	@Test
 	public void deberiaAlmacenarUnDocumento() {
-		this.servicioDocumento.altaDocumento(documento);
+		when(documento.getCodigo()).thenReturn(1);
+		when(documento.getFechaCreacion()).thenReturn(new Date(12/07/1997));
 
-		verify(this.repositorioDocumento).altaDocumento(new Documento(CODIGO, NOMBRE, FECHACREACION, PUBLICO, ESTADO));
+		final Documento resultado = this.servicioDocumento.altaDocumento(documento);
+		verify(this.repositorioDocumento).altaDocumento(resultado);
+		assertEquals(resultado.getNombre(), documento.getNombre());
+		assertEquals(resultado.getCodigo(), Integer.valueOf(1));
 	}
-	
+
 	@Test
 	public void deberiaModificarUnDocumento() {
-		this.servicioDocumento.modificarDocumento(documento);
+		when(documento.getCodigo()).thenReturn(1);
+		final Documento resultado = this.servicioDocumento.modificarDocumento(documento);
 
-		verify(this.repositorioDocumento).modificarDocumento(new Documento(CODIGO, NOMBRE, FECHACREACION, PUBLICO, ESTADO));
+		verify(this.repositorioDocumento).modificarDocumento(any());
+		assertEquals(resultado.getNombre(), documento.getNombre());
+		assertEquals(resultado.getCodigo(), Integer.valueOf(1));
 	}
 	
 	@Test

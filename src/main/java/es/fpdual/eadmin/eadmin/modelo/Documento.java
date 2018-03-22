@@ -7,13 +7,13 @@ public class Documento extends ModeloBaseAdministracionElectronica{
 	private Boolean publico;
 	private EstadoDocumento estado;
 	
-	public Documento(Integer codigo, String nombre, Date fechaCreacion, Boolean publico, EstadoDocumento estado) {
-		super(codigo, nombre, fechaCreacion);
+	public Documento(Integer codigo, String nombre, Date fechaCreacion, Date fechaModificacion, Boolean publico, EstadoDocumento estado) {
+		super(codigo, nombre, fechaCreacion, fechaModificacion);
 		this.publico = publico;
 		this.estado = estado;
 	}
 
-
+ 
 	public Boolean getPublico() {
 		return publico;
 	}

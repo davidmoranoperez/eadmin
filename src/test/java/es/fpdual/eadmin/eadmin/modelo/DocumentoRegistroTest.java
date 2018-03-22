@@ -10,6 +10,7 @@ import org.junit.Test;
 public class DocumentoRegistroTest {
 
 	private static final Date FECHA_CREACION = new Date();
+	private static final Date FECHAMODIFICACION = new Date();
 	private static final String NOMBRE_DOCUMENTO = "nombre";
 	private static final Boolean DOCUMENTO_PUBLICO = true;
 	private static final Integer CODIGO = 1;
@@ -19,9 +20,9 @@ public class DocumentoRegistroTest {
 
 	@Before
 	public void inicializar() {
-	documentoRegistro = new DocumentoRegistro(CODIGO,NOMBRE_DOCUMENTO,FECHA_CREACION,DOCUMENTO_PUBLICO,EstadoDocumento.ACTIVO, CODIGOREGISTRO, DNIINTERESADO);
+	documentoRegistro = new DocumentoRegistro(CODIGO,NOMBRE_DOCUMENTO,FECHA_CREACION,FECHAMODIFICACION,DOCUMENTO_PUBLICO,EstadoDocumento.ACTIVO, DNIINTERESADO,CODIGOREGISTRO);
 	}
-	
+
 	@Test
 	public void testComprobarGetter() {	
 		assertEquals(CODIGOREGISTRO, documentoRegistro.getCodigoRegistro());
