@@ -18,7 +18,7 @@ public class ImplementacionDeRepositoriosTest {
 	private static final EstadoDocumento ESTADO = EstadoDocumento.ACTIVO;
 	private Documento documento1 = new Documento(CODIGO, NOMBRE, FECHACREACION, PUBLICO, ESTADO);
 	private ImplementacionDeRepositorios repositorioDocumento;
-
+ 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 	}
