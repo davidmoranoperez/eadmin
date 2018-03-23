@@ -36,12 +36,33 @@ public class ImplementacionDeRepositoriosExpedientes implements RepositorioExped
 	@Override
 	public void eliminarExpediente(Integer codigo) {
 		
-		Optional <Expediente> documentoEncontrado = expedientes.stream().filter(d -> d.getCodigo().equals(codigo)).findFirst();
+		Optional <Expediente> expedienteEncontrado = expedientes.stream().filter(d -> d.getCodigo().equals(codigo)).findFirst();
 		
 		
-		if(documentoEncontrado.isPresent()) {
-			expedientes.remove(documentoEncontrado.get());
+		if(expedienteEncontrado.isPresent()) {
+			expedientes.remove(expedienteEncontrado.get());
 		}
+	}
+	
+	@Override
+	public Expediente asociarExpediente(Integer codigoExpediente, Documento documento) {
+		Optional <Expediente> expedienteEncontrado = expedientes.stream().filter(d -> d.getCodigo().equals(codigoExpediente)).findFirst();
+		if(expedienteEncontrado.isPresent()) {
+			expedienteEncontrado.get().getListaDocumentos().add(documento);
+			return expedienteEncontrado.get();
+		}
+		return null;
+	}
+
+	@Override
+	public Expediente desasociarExpediente(Integer codigoExpediente, Documento documento) {
+		Optional <Expediente> expedienteEncontrado = expedientes.stream().filter(d -> d.getCodigo().equals(codigoExpediente)).findFirst();
+		if(expedienteEncontrado.isPresent()) {
+			expedienteEncontrado.get().getListaDocumentos().remove(documento);
+			return expedienteEncontrado.get();
+		}
+		return null;
+		
 	}
 	
 	protected boolean tieneIgualCodigo(Documento documento, Integer codigo) {

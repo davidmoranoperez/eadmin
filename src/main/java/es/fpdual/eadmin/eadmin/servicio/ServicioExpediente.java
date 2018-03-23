@@ -11,7 +11,7 @@ public interface ServicioExpediente {
 
 	public void eliminarExpediente(Integer codigo);
 	
-	public void asociarExpediente(Integer codigo, Documento documento);
+	public Expediente asociarExpediente(Integer codigo, Documento documento);
 	
-	public void desasociarExpediente(Integer codigo, Documento documento);
+	public Expediente desasociarExpediente(Integer codigo, Documento documento);
 }

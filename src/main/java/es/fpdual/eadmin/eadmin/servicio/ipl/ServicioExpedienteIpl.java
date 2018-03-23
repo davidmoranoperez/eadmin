@@ -9,14 +9,13 @@ import es.fpdual.eadmin.eadmin.modelo.Documento;
 import es.fpdual.eadmin.eadmin.modelo.Expediente;
 import es.fpdual.eadmin.eadmin.modelo.builder.ExpedienteBuilder;
 import es.fpdual.eadmin.eadmin.repositorio.RepositorioExpediente;
-import es.fpdual.eadmin.eadmin.repositorio.ipl.ImplementacionDeRepositoriosExpedientes;
 import es.fpdual.eadmin.eadmin.servicio.ServicioExpediente;
 
 @Service
 public class ServicioExpedienteIpl implements ServicioExpediente{
 
 	RepositorioExpediente repositorioExpediente;
-
+	
 	@Autowired
 	public ServicioExpedienteIpl(RepositorioExpediente repositorioExpediente) {
 		this.repositorioExpediente = repositorioExpediente;
@@ -43,17 +42,6 @@ public class ServicioExpedienteIpl implements ServicioExpediente{
 	}
 
 
-	@Override
-	public void asociarExpediente(Integer codigoExpediente, Documento documento) {
-		
-	}
-
-	@Override
-	public void desasociarExpediente(Integer codigo, Documento documento) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	protected Expediente obtenerExpedienteConFechaCorrecta(Expediente expediente) {
 		
 		return new ExpedienteBuilder().clonar(expediente).conFechaCreacion(obtenerFechaActual()).construir();
@@ -61,7 +49,19 @@ public class ServicioExpedienteIpl implements ServicioExpediente{
 	}
 
 	protected Date obtenerFechaActual() {
-		// TODO Auto-generated method stub
 		return new Date();
+	}
+
+	@Override
+	public Expediente asociarExpediente(Integer codigo, Documento documento) {
+		return repositorioExpediente.asociarExpediente(codigo, documento);
+		
+		
+	}
+
+	@Override
+	public Expediente desasociarExpediente(Integer codigo, Documento documento) {
+		return repositorioExpediente.desasociarExpediente(codigo, documento);
+		
 	}
 }
