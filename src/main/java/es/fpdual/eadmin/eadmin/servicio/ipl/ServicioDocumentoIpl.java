@@ -1,6 +1,7 @@
 package es.fpdual.eadmin.eadmin.servicio.ipl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,15 +23,15 @@ public class ServicioDocumentoIpl implements ServicioDocumento {
 
 	@Override
 	public Documento altaDocumento(Documento documento) {
-		repositorioDocumento.altaDocumento(documento);
-		return documento;
+		final Documento documentoModificado = obtenerDocumentoConFechaCreacion(documento);
+		repositorioDocumento.altaDocumento(documentoModificado);
+		return documentoModificado;
 	}
 
 	@Override
 	public Documento modificarDocumento(Documento documento) {
 
-		final Documento documentoModificado = obtenerDocumentoConFechaCorrecta(documento);
-
+		final Documento documentoModificado = obtenerDocumentoConFechaModificacion(documento);
 		repositorioDocumento.modificarDocumento(documentoModificado);
 		return documentoModificado;
 	}
@@ -40,10 +41,24 @@ public class ServicioDocumentoIpl implements ServicioDocumento {
 		repositorioDocumento.eliminarDocumento(codigo);
 	}
 
-	protected Documento obtenerDocumentoConFechaCorrecta(Documento documento) {
-		
+	@Override
+	public Documento consultaDocumento(Integer codigo) {
+		return repositorioDocumento.obtenerDocumentoPorCodigo(codigo);
+
+	}
+
+	@Override
+	public List<Documento> obtenerTodosLosDocumentos() {
+		return repositorioDocumento.obtenerTodosLosDocumentos();
+
+	}
+
+	protected Documento obtenerDocumentoConFechaModificacion(Documento documento) {
+		return new DocumentoBuilder().clonar(documento).conFechaModificacion(obtenerFechaActual()).construir();
+	}
+
+	protected Documento obtenerDocumentoConFechaCreacion(Documento documento) {
 		return new DocumentoBuilder().clonar(documento).conFechaCreacion(obtenerFechaActual()).construir();
-		
 	}
 
 	protected Date obtenerFechaActual() {

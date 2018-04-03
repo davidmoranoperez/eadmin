@@ -40,6 +40,18 @@ public class ServicioExpedienteIpl implements ServicioExpediente{
 	public void eliminarExpediente(Integer codigo) {
 		repositorioExpediente.eliminarExpediente(codigo);
 	}
+	
+	@Override
+	public Expediente asociarExpediente(Integer codigo, Documento documento) {
+		return repositorioExpediente.asociarExpediente(codigo, documento);
+		
+	}
+
+	@Override
+	public Expediente desasociarExpediente(Integer codigo, Documento documento) {
+		return repositorioExpediente.desasociarExpediente(codigo, documento);
+		
+	}
 
 
 	protected Expediente obtenerExpedienteConFechaCorrecta(Expediente expediente) {
@@ -52,16 +64,5 @@ public class ServicioExpedienteIpl implements ServicioExpediente{
 		return new Date();
 	}
 
-	@Override
-	public Expediente asociarExpediente(Integer codigo, Documento documento) {
-		return repositorioExpediente.asociarExpediente(codigo, documento);
-		
-		
-	}
-
-	@Override
-	public Expediente desasociarExpediente(Integer codigo, Documento documento) {
-		return repositorioExpediente.desasociarExpediente(codigo, documento);
-		
-	}
+	
 }

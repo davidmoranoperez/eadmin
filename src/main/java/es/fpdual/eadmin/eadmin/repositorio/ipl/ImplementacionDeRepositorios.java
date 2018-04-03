@@ -44,6 +44,20 @@ public class ImplementacionDeRepositorios implements RepositorioDocumento{
 		}
 	}
 	
+	@Override
+	public List<Documento> obtenerTodosLosDocumentos() {
+		return getDocumentos();
+	}
+	
+	@Override
+	public Documento obtenerDocumentoPorCodigo(Integer codigo) {
+		Optional<Documento> documentoEncontrado = documentos.stream().filter(d -> d.getCodigo().equals(codigo)).findFirst();
+		if(documentoEncontrado.isPresent()) {
+			return documentoEncontrado.get();
+		}
+		return null;
+	}
+	
 	protected boolean tieneIgualCodigo(Documento documento, Integer codigo) {
 		return documento.getCodigo().equals(codigo);
 	}
