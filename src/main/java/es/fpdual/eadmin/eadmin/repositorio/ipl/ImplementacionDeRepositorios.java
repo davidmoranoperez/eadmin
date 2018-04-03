@@ -21,6 +21,7 @@ public class ImplementacionDeRepositorios implements RepositorioDocumento{
 			throw new IllegalArgumentException("El documento ya existe");
 		}
 		documentos.add(documento);
+		System.out.println("El documento ha sido almacenado");
 	}
 
 	@Override
