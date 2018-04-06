@@ -49,11 +49,11 @@ public class Expediente extends ModeloBaseAdministracionElectronica{
 		
 		if(obj instanceof Expediente) {
 			return codigo.equals(((Expediente) obj).getCodigo()) 
-					&& nombre.equals(((Expediente) obj).getNombre())
-					&& publico.equals(((Expediente) obj).getPublico())
-					&& fechaCreacion.equals(((Expediente) obj).getFechaCreacion())
-					&& estado.equals(((Expediente) obj).getEstado())
-					&& fechaArchivado.equals(((Expediente) obj).getFechaArchivado())
+//					&& nombre.equals(((Expediente) obj).getNombre())
+//					&& publico.equals(((Expediente) obj).getPublico())
+//					&& fechaCreacion.equals(((Expediente) obj).getFechaCreacion())
+//					&& estado.equals(((Expediente) obj).getEstado())
+//					&& fechaArchivado.equals(((Expediente) obj).getFechaArchivado())
 					;
 		}
 		return false;

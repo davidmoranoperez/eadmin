@@ -14,4 +14,6 @@ public interface RepositorioExpediente {
 	Expediente asociarExpediente(Integer codigoExpediente, Documento documento);
 
 	Expediente desasociarExpediente(Integer codigo, Documento documento);
+	
+	public abstract void escribeListaExpediente();
 }
