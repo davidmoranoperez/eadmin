@@ -10,7 +10,7 @@ public interface RepositorioDocumento {
 
 	public abstract void modificarDocumento (Documento documento);
 	
-	public abstract void eliminarDocumento (Integer codigo);
+	public abstract void eliminarDocumento (Documento documento);
 	
 	public abstract Documento obtenerDocumentoPorCodigo(Integer codigo);
 	
