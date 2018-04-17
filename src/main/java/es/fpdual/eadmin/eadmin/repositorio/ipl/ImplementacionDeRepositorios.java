@@ -44,18 +44,19 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import es.fpdual.eadmin.eadmin.mapper.DocumentoMapper;
 import es.fpdual.eadmin.eadmin.modelo.Documento;
+import es.fpdual.eadmin.eadmin.modelo.builder.DocumentoBuilder;
 import es.fpdual.eadmin.eadmin.repositorio.RepositorioDocumento;
 
 @Repository
 public class ImplementacionDeRepositorios implements RepositorioDocumento {
 
 	private DocumentoMapper mapper;
-	
+
 	@Autowired
 	public ImplementacionDeRepositorios(DocumentoMapper mapper) {
-		this.mapper= mapper;
+		this.mapper = mapper;
 	}
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ImplementacionDeRepositorios.class);
 
 	PrintWriter pw = null;
@@ -65,17 +66,77 @@ public class ImplementacionDeRepositorios implements RepositorioDocumento {
 	String archivoEliminar = "Eliminar.txt";
 	String archivoModificado = "Modificar.txt";
 	String excel = "Documentos.xls";
- 
+
 	@Override
 	public void altaDocumento(Documento documento) {
-//		logger.info("Comienza el método de altaDocumento");
-		//exportExcel("Alta", documento, excel);	
-		this.mapper.insertarDocumento(documento);	
-//		logger.info("Saliendo del exportar excel");
-//		altaDocumentoFichero(documento);
-//		logger.info(toString() + documento.getCodigo() + " se ha creado correctamente");
-//
-//		logger.info("Saliendo del método de altaDocumento");
+		// logger.info("Comienza el método de altaDocumento");
+		// exportExcel("Alta", documento, excel);
+		Integer maximo = this.mapper.maximoCodigo();
+		Documento documento2 = new DocumentoBuilder().clonar(documento).conCodigo(maximo).construir();
+		this.mapper.insertarDocumento(documento2);
+		// logger.info("Saliendo del exportar excel");
+		// altaDocumentoFichero(documento);
+		// logger.info(toString() + documento.getCodigo() + " se ha creado
+		// correctamente");
+		//
+		// logger.info("Saliendo del método de altaDocumento");
+	}
+
+	@Override
+	public void modificarDocumento(Documento documento) {
+		// logger.info("Comienza el método de modificarDocumento");
+		// logger.info("El documento a modificar es: " + documento.getNombre() + ", " +
+		// documento.getCodigo() + ", "
+		// + "Fecha: " + documento.getFechaCreacion());
+		//
+		int modificado = this.mapper.modificarDocumento(documento);
+
+		if (modificado == 0) {
+			throw new IllegalArgumentException("No se encuentra el documento");
+		}
+		// modificarDocumentoFichero(documento);
+		//
+		// logger.info("El documento modificado se queda: " + documento.getNombre() + ",
+		// " + documento.getCodigo() + ", "
+		// + "Fecha: " + documento.getFechaCreacion());
+		// documentos.set(documentos.indexOf(documento), documento);
+		// exportExcel("Modificar", documento, excel);
+		// logger.info("Saliendo del método de modificarDocumento");
+	}
+
+	@Override
+	public void eliminarDocumento(Integer codigo) {
+		// logger.info("Comienza el método de eliminarDocumento");
+		// Optional<Documento> documentoEncontrado = documentos.stream().filter(d ->
+		// d.getCodigo().equals(codigo))
+		// .findFirst();
+		//
+		// if (documentoEncontrado.isPresent()) {
+		this.mapper.eliminarDocumento(codigo);
+		// eliminarDocumentoFichero(documentoEncontrado);
+
+		// documentos.remove(documentoEncontrado.get());
+		// exportExcel("Eliminar", documentoEncontrado.get(), excel);
+		// logger.info("El documento con codigo: " +
+		// documentoEncontrado.get().getCodigo()
+		// + ", ha sido eliminado correctamente");
+		// }
+		// logger.info("Saliendo del método de eliminarDocumento");
+	}
+
+	@Override
+	public Documento obtenerDocumentoPorCodigo(Integer codigo) {
+		// logger.info("Entrando en el método de obtenerDocumentoPorCodigo");
+		// Optional<Documento> documentoEncontrado = documentos.stream().filter(d ->
+		// d.getCodigo().equals(codigo))
+		// .findFirst();
+		// if (documentoEncontrado.isPresent()) {
+		// logger.info("Saliendo del método de obtenerDocumentoPorCodigo");
+		// return documentoEncontrado.get();
+		// }
+		return this.mapper.consultarDocumento(codigo);
+		// logger.info("Saliendo del método de obtenerDocumentoPorCodigo");
+		// return null;
 	}
 
 	public static void exportExcel(String nombreHoja, Documento documento, String fileName) {
@@ -84,22 +145,21 @@ public class ImplementacionDeRepositorios implements RepositorioDocumento {
 			FileInputStream inputStream = new FileInputStream(new File(fileName));
 			Workbook workbook = WorkbookFactory.create(inputStream);
 			CellStyle style = workbook.createCellStyle();
-			
-			
+
 			// Sets the cell background
-			 style.setFillForegroundColor(IndexedColors.BLUE_GREY.getIndex());
-		 
+			style.setFillForegroundColor(IndexedColors.BLUE_GREY.getIndex());
+
 			// Styles
 			HSSFCellStyle headerStyle = (HSSFCellStyle) workbook.createCellStyle();
 			headerStyle.setFillForegroundColor(HSSFColor.CORAL.index);
 			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-			
+
 			HSSFCellStyle oddRowStyle;
-			
+
 			HSSFCellStyle evenRowStyle = (HSSFCellStyle) workbook.createCellStyle();
 			evenRowStyle.setFillForegroundColor(HSSFColor.BLUE.index);
 			evenRowStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-			// Integer to store the index of the next row			
+			// Integer to store the index of the next row
 
 			int numeroHoja;
 			if (nombreHoja.equals("Alta")) {
@@ -120,26 +180,24 @@ public class ImplementacionDeRepositorios implements RepositorioDocumento {
 			int rowCount = sheet.getLastRowNum();
 
 			Row row = sheet.createRow(++rowCount);
-			
 
 			int columnCount = 0;
 
 			Cell cell = row.createCell(columnCount);
 			cell.setCellValue(rowCount);
-			
 
 			for (Object field : bookData) {
 				cell = row.createCell(++columnCount);
-				
+
 				if (field instanceof String) {
 					cell.setCellValue((String) field);
 				} else if (field instanceof Integer) {
 					cell.setCellValue((Integer) field);
 				}
-				if(rowCount%2==0) {
+				if (rowCount % 2 == 0) {
 					cell.setCellStyle(evenRowStyle);
 				}
-				
+
 			}
 
 			inputStream.close();
@@ -235,165 +293,122 @@ public class ImplementacionDeRepositorios implements RepositorioDocumento {
 		return data;
 	}
 
-	private void altaDocumentoFichero(Documento documento) {
-		try {
-			file = new FileWriter(archivoAlta, true);
-			pw = new PrintWriter(file);
-			pw.println("*********************");
-			pw.println("Documento: " + documento.getCodigo());
-			pw.println("Nombre: " + documento.getNombre());
-			pw.println("Fecha: " + documento.getFechaCreacion());
-			pw.println("Estado: " + documento.getEstado());
-			pw.println("Fecha modificacion: " + documento.getFechaModificacion());
-			pw.println("Publico: " + documento.getPublico() + "\n");
+	// private void altaDocumentoFichero(Documento documento) {
+	// try {
+	// file = new FileWriter(archivoAlta, true);
+	// pw = new PrintWriter(file);
+	// pw.println("*********************");
+	// pw.println("Documento: " + documento.getCodigo());
+	// pw.println("Nombre: " + documento.getNombre());
+	// pw.println("Fecha: " + documento.getFechaCreacion());
+	// pw.println("Estado: " + documento.getEstado());
+	// pw.println("Fecha modificacion: " + documento.getFechaModificacion());
+	// pw.println("Publico: " + documento.getPublico() + "\n");
+	//
+	// pw.close();
+	//
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
 
-			pw.close();
+	// private void modificarDocumentoFichero(Documento documento) {
+	// try {
+	// file = new FileWriter(archivoModificado, true);
+	// pw = new PrintWriter(file);
+	// pw.println("*********************");
+	// pw.println("Documento: " + documento.getCodigo());
+	// pw.println("Nombre: " + documento.getNombre());
+	// pw.println("Fecha: " + documento.getFechaCreacion());
+	// ;
+	// pw.println("Estado: " + documento.getEstado());
+	// pw.println("Fecha modificacion: " + documento.getFechaModificacion());
+	// pw.println("Publico: " + documento.getPublico() + "\n");
+	//
+	// pw.close();
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	// private void eliminarDocumentoFichero(Optional<Documento>
+	// documentoEncontrado) {
+	// try {
+	// file = new FileWriter(archivoEliminar, true);
+	// pw = new PrintWriter(file);
+	// pw.println("*********************");
+	// pw.println("Documento: " + documentoEncontrado.get().getCodigo());
+	// pw.println("Nombre: " + documentoEncontrado.get().getNombre());
+	// pw.println("Fecha: " + documentoEncontrado.get().getFechaCreacion());
+	// ;
+	// pw.println("Estado: " + documentoEncontrado.get().getEstado());
+	// pw.println("Fecha modificacion: " +
+	// documentoEncontrado.get().getFechaModificacion());
+	// pw.println("Publico: " + documentoEncontrado.get().getPublico() + "\n");
+	//
+	// pw.close();
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
 
-	@Override
-	public void modificarDocumento(Documento documento) {
-//		logger.info("Comienza el método de modificarDocumento");
-//		logger.info("El documento a modificar es: " + documento.getNombre() + ", " + documento.getCodigo() + ", "
-//				+ "Fecha: " + documento.getFechaCreacion());
-//		
-		this.mapper.modificarDocumento(documento);
-		modificarDocumentoFichero(documento);
-//
-//		logger.info("El documento modificado se queda: " + documento.getNombre() + ", " + documento.getCodigo() + ", "
-//				+ "Fecha: " + documento.getFechaCreacion());
-//		documentos.set(documentos.indexOf(documento), documento);
-		//exportExcel("Modificar", documento, excel);
-//		logger.info("Saliendo del método de modificarDocumento");
-	}
+	// @Override
+	// public List<Documento> obtenerTodosLosDocumentos() {
+	//// logger.info("Comienza el método de eliminar documento");
+	//// for (Documento doc : documentos) {
+	//// logger.info("***********");
+	//// logger.info("Documento: " + doc.getCodigo());
+	//// logger.info("Nombre: " + doc.getNombre());
+	//// logger.info("Fecha: " + doc.getFechaCreacion());
+	//// //exportExcel("TodosDocumentos", doc, excel);
+	//// logger.info("****************");
+	//// }
+	//// logger.info("Saliendo del método de obtenerTodosLosDocumento");
+	// return getDocumentos();
+	// }
 
-	private void modificarDocumentoFichero(Documento documento) {
-		try {
-			file = new FileWriter(archivoModificado, true);
-			pw = new PrintWriter(file);
-			pw.println("*********************");
-			pw.println("Documento: " + documento.getCodigo());
-			pw.println("Nombre: " + documento.getNombre());
-			pw.println("Fecha: " + documento.getFechaCreacion());
-			;
-			pw.println("Estado: " + documento.getEstado());
-			pw.println("Fecha modificacion: " + documento.getFechaModificacion());
-			pw.println("Publico: " + documento.getPublico() + "\n");
+	// public void escribeLista() {
+	// logger.info("Comienza la escritura en la lista");
+	// try {
+	// file = new FileWriter(archivoLista, true);
+	// pw = new PrintWriter(file);
+	//
+	// for (Documento doc : documentos) {
+	// pw.println("*********************");
+	// pw.println("Documento: " + doc.getCodigo());
+	// pw.println("Nombre: " + doc.getNombre());
+	// pw.println("Fecha: " + doc.getFechaCreacion());
+	// ;
+	// pw.println("Estado: " + doc.getEstado());
+	// pw.println("Fecha modificacion: " + doc.getFechaModificacion());
+	// pw.println("Publico: " + doc.getPublico());
+	//
+	// }
+	// pw.close();
+	// } catch (IOException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	// logger.info("Saliendo del método de escribir lista");
+	// }
 
-			pw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void eliminarDocumento(Documento documento) {
-//		logger.info("Comienza el método de eliminarDocumento");
-//		Optional<Documento> documentoEncontrado = documentos.stream().filter(d -> d.getCodigo().equals(codigo))
-//				.findFirst();
-//
-//		if (documentoEncontrado.isPresent()) {
-			this.mapper.eliminarDocumento(documento);
-//			eliminarDocumentoFichero(documentoEncontrado);
-
-//			documentos.remove(documentoEncontrado.get());
-			//exportExcel("Eliminar", documentoEncontrado.get(), excel);
-//			logger.info("El documento con codigo: " + documentoEncontrado.get().getCodigo()
-//					+ ", ha sido eliminado correctamente");
-//		}
-//		logger.info("Saliendo del método de eliminarDocumento");
-	}
-
-	private void eliminarDocumentoFichero(Optional<Documento> documentoEncontrado) {
-		try {
-			file = new FileWriter(archivoEliminar, true);
-			pw = new PrintWriter(file);
-			pw.println("*********************");
-			pw.println("Documento: " + documentoEncontrado.get().getCodigo());
-			pw.println("Nombre: " + documentoEncontrado.get().getNombre());
-			pw.println("Fecha: " + documentoEncontrado.get().getFechaCreacion());
-			;
-			pw.println("Estado: " + documentoEncontrado.get().getEstado());
-			pw.println("Fecha modificacion: " + documentoEncontrado.get().getFechaModificacion());
-			pw.println("Publico: " + documentoEncontrado.get().getPublico() + "\n");
-
-			pw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public String toString() {
+		return "El documento con codigo ";
 	}
 
 	@Override
 	public List<Documento> obtenerTodosLosDocumentos() {
-//		logger.info("Comienza el método de eliminar documento");
-//		for (Documento doc : documentos) {
-//			logger.info("***********");
-//			logger.info("Documento: " + doc.getCodigo());
-//			logger.info("Nombre: " + doc.getNombre());
-//			logger.info("Fecha: " + doc.getFechaCreacion());
-//			//exportExcel("TodosDocumentos", doc, excel);
-//			logger.info("****************");
-		}
-		logger.info("Saliendo del método de obtenerTodosLosDocumento");
-		return getDocumentos();
+		return this.mapper.seleccionarTodosLosDocumentos();
 	}
 
 	@Override
-	public Documento obtenerDocumentoPorCodigo(Integer codigo) {
-//		logger.info("Entrando en el método de obtenerDocumentoPorCodigo");
-//		Optional<Documento> documentoEncontrado = documentos.stream().filter(d -> d.getCodigo().equals(codigo))
-//				.findFirst();
-//		if (documentoEncontrado.isPresent()) {
-//			logger.info("Saliendo del método de obtenerDocumentoPorCodigo");
-//			return documentoEncontrado.get();
-//		}
-		this.mapper.consultarDocumento(codigo);
-//		logger.info("Saliendo del método de obtenerDocumentoPorCodigo");
-//		return null;
-	}
-
 	public void escribeLista() {
-		logger.info("Comienza la escritura en la lista");
-		try {
-			file = new FileWriter(archivoLista, true);
-			pw = new PrintWriter(file);
+		// TODO Auto-generated method stub
 
-			for (Documento doc : documentos) {
-				pw.println("*********************");
-				pw.println("Documento: " + doc.getCodigo());
-				pw.println("Nombre: " + doc.getNombre());
-				pw.println("Fecha: " + doc.getFechaCreacion());
-				;
-				pw.println("Estado: " + doc.getEstado());
-				pw.println("Fecha modificacion: " + doc.getFechaModificacion());
-				pw.println("Publico: " + doc.getPublico());
-
-			}
-			pw.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		logger.info("Saliendo del método de escribir lista");
-	}
-
-	protected boolean tieneIgualCodigo(Documento documento, Integer codigo) {
-		return documento.getCodigo().equals(codigo);
-	}
-
-	public List<Documento> getDocumentos() {
-		return documentos;
-	}
-
-	public String toString() {
-		return "El documento con codigo ";
 	}
 
 }
